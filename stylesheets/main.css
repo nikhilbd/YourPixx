@@ -1,0 +1,52 @@
+body {
+    /* background-color: #ffffff;
+    font-size: medium; */
+  
+    color: #211922;
+    font-family: "helvetica neue",arial,sans-serif;
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 10px;
+    
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+hr {
+    height: 1px;
+    /* border: 0; */
+    color: #E6E6E6; 
+}
+#loginStatus {
+    font-size: small;
+}
+/*
+#mainContent {
+    visibility: hidden;
+}
+*/
+#status { visibility: hidden; }
+
+#picOfDay, #picOfDay2 {
+    background-color: #F2F0F0;
+    text-align: center;
+}    
+
+#picName, #picName2 {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+#picArea, #picArea2 {
+    box-shadow: 0 3px 8px rgba(34, 25, 25, 0.4);
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+#picHeader, #picHeader2, #picFooter {
+    text-align: left;
+    font-size: large;
+}
