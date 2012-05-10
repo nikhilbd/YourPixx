@@ -20,6 +20,11 @@ hr {
 }
 #loginStatus {
     font-size: small;
+    overflow:hidden;
+}
+
+#loginStatusText, #logout {
+    float:left;
 }
 /*
 #mainContent {
@@ -33,10 +38,23 @@ hr {
     text-align: center;
 }    
 
+#picDetails, #picDetails2 {
+    overflow:hidden;
+}
+
 #picName, #picName2 {
+    float:left;
     padding-left: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+#picMetadata, #picMetadata2 {
+    float:right;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: right;
 }
 
 

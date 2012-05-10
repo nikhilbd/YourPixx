@@ -1,5 +1,7 @@
-// // Steps to follow
-// // 6. Use git
+// Serve the facebook pictures
+// Todo: 
+// * Clean up code
+// COnvert to html5
 
 $(document).ready(function(){
     $("#mainContent").hide();
@@ -42,39 +44,40 @@ $(document).ready(function(){
         FB.logout(function (response) {
         })
     });
-    
-    function logOutFollowUp() {
-        $("#loginButton").show();
-        $("#loginStatus").hide();
-        $("mainContent").hide();
-    }
-    
-    function renderPage(response) {
-        var uid = response.authResponse.userID;
-        var accessToken = response.authResponse.accessToken;
-        
-        $("#loginButton").hide();
-        $("#loginStatus").show();
-        $("#loginStatusText").text("Logged in via Facebook");
-        $("#logout").text("Log out");
-        $("#mainContent").show();
-        
-        // Picture where you are tagged
-        var fqlQuery = 'SELECT src_big, caption, place_id FROM photo WHERE pid IN ( SELECT pid FROM photo_tag WHERE subject=me() )';
-        renderPic(fqlQuery, "");
-        
-        // Picture taken by you
-        var fqlQuery = 'SELECT src_big, caption, place_id FROM photo WHERE aid IN ( SELECT aid FROM album WHERE owner=me() )';
-        renderPic(fqlQuery, "2");
-        
-    }
+
 });
+
+function logOutFollowUp() {
+    $("#loginButton").show();
+    $("#loginStatus").hide();
+    $("mainContent").hide();
+}
+
+
+function renderPage(response) {
+    var uid = response.authResponse.userID;
+    var accessToken = response.authResponse.accessToken;
+    
+    $("#loginButton").hide();
+    $("#loginStatus").show();
+    $("#loginStatusText").text("Logged in via Facebook");
+    $("#logout").html("&nbsp;(Log out)");
+    $("#mainContent").show();
+    
+    // Picture where you are tagged
+    var fqlQuery = 'SELECT src_big, caption, link, like_info, comment_info FROM photo WHERE pid IN ( SELECT pid FROM photo_tag WHERE subject=me() )';
+    renderPic(fqlQuery, "");
+    
+    // Picture taken by you
+    var fqlQuery = 'SELECT src_big, caption, link, like_info, comment_info FROM photo WHERE aid IN ( SELECT aid FROM album WHERE owner=me() )';
+    renderPic(fqlQuery, "2");
+}
 
 function renderPic(fqlQuery, picType)
 {
     var apiCall = {
-        method: 'fql.query',
-        query: fqlQuery
+method: 'fql.query',
+query: fqlQuery
     };
 
     // Get all the user photos
@@ -89,16 +92,26 @@ function renderPic(fqlQuery, picType)
             
             var podTag = "#picOfDay" + picType;
             var picNameTag = "#picName" + picType;
+            var picMetadataTag = "#picMetadata" + picType;
             
             $(podTag).empty();
             $(podTag).append("<img src='" + response[randomIndex].src_big + "'></img>");
             
             var picName = response[randomIndex].caption;
+            var link = response[randomIndex].link;
+            
             $(picNameTag).empty();
-            if (picName.length > 0)
-            {
-                $(picNameTag).text(picName);
-            }
+            // if (picName.length > 0)
+            // {
+            var picNameText = picName + " (<a href='" + link + "'>Link</a>)";
+            $(picNameTag).html(picNameText);
+            
+            var picMetadataHtml = "<a href='" + link + "'>" + 
+            response[randomIndex].like_info.like_count + " likes and " + 
+            response[randomIndex].comment_info.comment_count + " comments</a>";
+            
+            $(picMetadataTag).html(picMetadataHtml);
+            // }
         }
     });
 }       

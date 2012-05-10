@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE html>
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="stylesheets/main.css" />
@@ -9,7 +11,7 @@
     <div id="fb-root"></div>
     
     <div id="loginStatus">
-        <div id='loginStatusText'></div><a id='logout' href=''>Log Out</a>
+        <div id='loginStatusText'></div><a id='logout' href=''>&nbsp;(Log Out)</a>
     </div>
     <div id="loginButton" class="fb-login-button" scope="user_photos,user_photo_video_tags">
         Login with Facebook
@@ -19,10 +21,12 @@
         <hr />
         <!-- <div id="status"></div> -->
 
-        <div id="picHeader">Here's a pic of you...</div><br>
+        <div id="picHeader">Here's a pic of you...</div><br />
         <div id="picArea">
             <div id="picOfDay"></div>
-            <div id="picName"></div>
+            <div id="picDetails">
+                <div id="picName"></div><div id="picMetadata"></div>
+            </div>
         </div>
         
         <br>
@@ -30,7 +34,9 @@
         <br>
         <div id="picArea2">
             <div id="picOfDay2"></div>
-            <div id="picName2"></div>
+            <div id="picDetails2">
+                <div id="picName2"></div><div id="picMetadata2"></div>
+            </div>
         </div>
         
         <br>
