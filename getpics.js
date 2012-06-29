@@ -1,7 +1,4 @@
 // Serve the facebook pictures
-// Todo: 
-// * Clean up code
-// COnvert to html5
 
 $(document).ready(function(){
     $("#mainContent").hide();
@@ -53,7 +50,6 @@ function logOutFollowUp() {
     $("mainContent").hide();
 }
 
-
 function renderPage(response) {
     var uid = response.authResponse.userID;
     var accessToken = response.authResponse.accessToken;
@@ -73,23 +69,39 @@ function renderPage(response) {
     renderPic(fqlQuery, "2");
 }
 
+// Render a single pic & associated elements
 function renderPic(fqlQuery, picType)
 {
     var apiCall = {
-method: 'fql.query',
-query: fqlQuery
+        method: 'fql.query',
+        query: fqlQuery
     };
 
-    // Get all the user photos
+    // Make the actual FB API call to get the data
     FB.api(apiCall, function(response) {
         if (response.error) {
             $("#status").text(response.error.message);
         } else {
+            // Get all the user photos
+            
             var numPics = response.length;
             $("#status").append("<p>Retrieved pics: " + numPics);
+
+            // Select the date for which to display the photos. I can be "yest" or none (today)
+            var dateSelected = new Date();
+            paramDate = getParameterByName("date")
+            if (paramDate && paramDate == "yest") {
+                dateSelected.setDate(dateSelected.getDate() - 1);
+                $("#picFooter").html("<a href='?date='>(Today's pictures)</a>");
+            }
+            else {
+                $("#picFooter").html("Come again tomorrow to rediscover 2 more pictures!!! <a href='?date=yest'>(Yesterday's pictures)</a>");
+            }
             
-            var randomIndex = createRandomNumber(0, numPics - 1); 
+            // Select a random photo using the date as seed
+            var randomIndex = createRandomNumber(0, numPics - 1, dateSelected); 
             
+            // Fill all UI elements according to the random pictures selected
             var podTag = "#picOfDay" + picType;
             var picNameTag = "#picName" + picType;
             var picMetadataTag = "#picMetadata" + picType;
@@ -101,8 +113,7 @@ query: fqlQuery
             var link = response[randomIndex].link;
             
             $(picNameTag).empty();
-            // if (picName.length > 0)
-            // {
+
             var picNameText = picName + " (<a href='" + link + "'>Link</a>)";
             $(picNameTag).html(picNameText);
             
@@ -111,7 +122,6 @@ query: fqlQuery
             response[randomIndex].comment_info.comment_count + " comments</a>";
             
             $(picMetadataTag).html(picMetadataHtml);
-            // }
         }
     });
 }       
@@ -128,9 +138,8 @@ function nextRandomNumber() {
     return (this.seed * this.oneOverM);
 }
 
-function RandomNumberGenerator(){
-    var d = new Date();
-    this.seed = 2345678901 + (d.getDate() * 0xFFFFFF) + (d.getMonth() * 0xFFFF);
+function RandomNumberGenerator(date){
+    this.seed = 2345678901 + (date.getDate() * 0xFFFFFF) + (date.getMonth() * 0xFFFF);
     this.A = 48271;
     this.M = 2147483647;
     this.Q = this.M / this.A;
@@ -140,8 +149,21 @@ function RandomNumberGenerator(){
     return this;
 }
 
-function createRandomNumber(Min, Max){
-    var rand = new RandomNumberGenerator();
-    return Math.round((Max-Min) * rand.next() + Min);
+// Create random number between Min & Max using date as a seed
+function createRandomNumber(min, max, date){
+    var rand = new RandomNumberGenerator(date);
+    return Math.round((max - min) * rand.next() + min);
 }
 
+// Get query string parameter
+function getParameterByName(name)
+{
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.search);
+    if(results == null)
+    return "";
+    else
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
